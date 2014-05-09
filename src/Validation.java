@@ -1,5 +1,5 @@
 
-public class Validation {
+class Validation {
 
 	static boolean hasMove(Board board) {
 		return !board.isFull() 
@@ -9,12 +9,16 @@ public class Validation {
 	
 	static boolean legalMove(int[][] board, String move) {
 		switch(move.toUpperCase().charAt(0)) {
+		case '2':
 		case 'D':
 			return twoVerticalEqualEntries(board) || emptySpaceForD(board);
+		case '8':
 		case 'U':
 			return twoVerticalEqualEntries(board) || emptySpaceForU(board);
+		case '6':
 		case 'R':
 			return twoHorizontalEqualEntries(board) || emptySpaceForR(board);
+		case '4':
 		case 'L':
 			return twoHorizontalEqualEntries(board) || emptySpaceForL(board);
 		default:

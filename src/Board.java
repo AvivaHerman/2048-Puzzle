@@ -2,12 +2,12 @@ import java.util.LinkedList;
 import java.util.Random;
 
 
-public class Board {
+class Board {
 	private int[][] board;
 	private Random rnd;
 	private LinkedList<Pair> emptyEntries;
 
-	public Board(int n) {
+	Board(int n) {
 		this.board = new int[n][n];
 		this.emptyEntries = new LinkedList<>();
 		

@@ -1,16 +1,17 @@
 
-public class MoveLeft extends Move {
+class MoveLeft extends Move {
 
-	public MoveLeft(int handle, int[][] board) {
-		super(handle, board);
+	MoveLeft(int handle, int[][] board, Score score) {
+		super(handle, board, score);
 	}
 
 	@Override
 	void merge() {
-		for (int j = 1; j < board[handle].length; j++) {
-			if (board[handle][j] == board[handle][j - 1]) {
-				board[handle][j - 1] = board[handle][j - 1] * 2;
-				board[handle][j] = 0;
+		for (int j = 0; j < board[handle].length - 1; j++) {
+			if (board[handle][j] == board[handle][j + 1]) {
+				board[handle][j] = board[handle][j] * 2;
+				myScore += board[handle][j];
+				board[handle][j + 1] = 0;
 			}
 		}
 	}

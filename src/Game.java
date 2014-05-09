@@ -3,87 +3,88 @@ import java.util.Scanner;
 
 public class Game {
 	private Board board;
-	private Thread[] left;
-	private Thread[] right;
-	private Thread[] up;
-	private Thread[] down;
+	private Thread[] threads;
+	private String move;
+	private Score score;
+	private boolean win;
 	
 	public Game(int n) {
 		board = new Board(n);
-		
-		left  = new Thread[n];
-		right = new Thread[n];
-		up 	  = new Thread[n];
-		down  = new Thread[n];
+		threads  = new Thread[n];
+		score = new Score();
+		win = false;
 	}
 	
 	public void start()
 	{
-		String move;
 		Scanner in = new Scanner(System.in);
 		  		
-		while (Validation.hasMove(this.board)) {
-			System.out.println(this.board);
+		while (Validation.hasMove(board)) {
+			System.out.println(board);
 			
-			do {
-				System.out.println("\nPlease choose the next move: left(L), right(R), up(U), down(D)");
-				move = in.next();
-			} while (!Validation.legalMove(this.board.get(), move));
-			
-			switch(move.toUpperCase().charAt(0)) {
-			case 'U':
-				for (int i = 0; i < up.length; i++) {
-					up[i] = new Thread(new MoveUp(i, board.get()));
-				}
-				play(up);
-				break;
-			case 'D':
-				for (int i = 0; i < down.length; i++) {
-					down[i] = new Thread(new MoveDown(i, board.get()));
-				}
-				play(down);
-				break;
-			case 'L':
-				for (int i = 0; i < left.length; i++) {
-					left[i] = new Thread(new MoveLeft(i, board.get()));
-				}
-				play(left);
-				break;
-			case 'R':
-				for (int i = 0; i < right.length; i++) {
-					right[i] = new Thread(new MoveRight(i, board.get()));
-				}
-				play(right);
-				break;
-			default:
-				System.out.println("Not a legal move!");
-				break;
-			}
-			
-			
-			this.board.updateEmptyEntries();
-			this.board.addNewVal();
+			chooseMove(in);
+			makeMove();
+			board.updateEmptyEntries();
+			board.addNewVal();
 
-			if (Validation.check2048(this.board.get())) {
-				System.out.println(this.board);
-				System.out.println("You Won!");
+			if (Validation.check2048(board.get())) {
+				win = true;
+				System.out.println(this);
 				in.close();
 				return;
 			}
 		}
 		
 		in.close();
-		System.out.println("Game Over");
+		System.out.println(this);
 	}
 
-	private void play(Thread[] move) {
-		for (int i = 0; i < move.length; i++) {
-			move[i].start();
+	private void chooseMove(Scanner in) {
+		do {
+			System.out.println("Please choose the next move: left(L), right(R), up(U), down(D)");
+			move = in.next();
+		} while (!Validation.legalMove(board.get(), move));
+		
+		switch(move.toUpperCase().charAt(0)) {
+		case '8':
+		case 'U':
+			for (int i = 0; i < threads.length; i++) {
+				threads[i] = new Thread(new MoveUp(i, board.get(), score));
+			}
+			break;
+		case '2':
+		case 'D':
+			for (int i = 0; i < threads.length; i++) {
+				threads[i] = new Thread(new MoveDown(i, board.get(), score));
+			}
+			break;
+		case '4':
+		case 'L':
+			for (int i = 0; i < threads.length; i++) {
+				threads[i] = new Thread(new MoveLeft(i, board.get(), score));
+			}
+			break;
+		case '6':
+		case 'R':
+			for (int i = 0; i < threads.length; i++) {
+				threads[i] = new Thread(new MoveRight(i, board.get(), score));
+			}
+			break;
+		default:
+			System.out.println("Not a legal move!");
+			break;
+		}
+	}
+
+	private void makeMove() {
+		score.addMove();
+		for (int i = 0; i < threads.length; i++) {
+			threads[i].start();
 		}
 		
-		for (int i = 0; i < move.length; i++) {
+		for (int i = 0; i < threads.length; i++) {
 			try {
-				move[i].join();
+				threads[i].join();
 			} catch (InterruptedException e) {
 				i--;
 				continue;
@@ -94,5 +95,10 @@ public class Game {
 	public static void main(String[] args) {
 		Game game = new Game(4);
 		game.start();
+	}
+
+	@Override
+	public String toString() {
+		return "" + board + score + (win ? "You Won!" : "Game Over");
 	}
 }

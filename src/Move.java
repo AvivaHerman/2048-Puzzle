@@ -1,12 +1,16 @@
 
-public abstract class Move implements Runnable {
+abstract class Move implements Runnable {
 
 	int handle;
 	int[][] board;
+	Score score;
+	int myScore;
 
-	public Move(int handle, int[][] board) {
+	Move(int handle, int[][] board, Score score) {
 		this.handle = handle;
 		this.board = board;
+		this.score = score;
+		this.myScore = 0;
 	}
 	
 	@Override
@@ -14,6 +18,7 @@ public abstract class Move implements Runnable {
 		shrink();
 		merge();
 		shrink();
+		score.addScore(myScore);
 	}
 
 	abstract void merge();

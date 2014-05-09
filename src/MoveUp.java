@@ -1,8 +1,8 @@
 
-public class MoveUp extends Move {
+class MoveUp extends Move {
 
-	public MoveUp(int handle, int[][] board) {
-		super(handle, board);
+	MoveUp(int handle, int[][] board, Score score) {
+		super(handle, board, score);
 	}
 
 	@Override
@@ -10,6 +10,7 @@ public class MoveUp extends Move {
 		for (int i = 0; i < board.length - 1; i++) {
 			if (board[i][handle] == board[i + 1][handle]) {
 				board[i][handle] = board[i][handle] * 2;
+				myScore += board[i][handle];
 				board[i + 1][handle] = 0;
 			}
 		}
