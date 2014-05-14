@@ -53,7 +53,7 @@ class Board {
 		int n = board.length;
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < board[i].length; j++) {
-				res = res + "|\t" + board[i][j] + "\t";
+				res = res + "|\t" + (board[i][j] == 0 ? " " : board[i][j]) + "\t";
 				
 				if (j == n - 1) res += "|\n";
 			}

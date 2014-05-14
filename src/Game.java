@@ -18,7 +18,7 @@ public class Game {
 	public void start()
 	{
 		Scanner in = new Scanner(System.in);
-		  		
+
 		while (Validation.hasMove(board)) {
 			System.out.println(board);
 			
